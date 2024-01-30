@@ -27,88 +27,62 @@ const App: React.FC = () => {
   }, []);
 
   const fetchTodos = async () => {
-    try {
-      const res = await axios.get('http://localhost:3000/todo');
-      if (res.data.isSuccess) {
-        notify(res.data.message, "success");
-        setTodos(res.data.data);
-      }
-    } catch (err) {
-      notify("something went wrong");
-      console.log(err);
+    const res = await axios.get('http://localhost:3000/todo');
+    if (res.data.isSuccess) {
+      notify(res.data.message, "success");
+      setTodos(res.data.data);
     }
   }
 
   const addTodo = async (text: string) => {
-    try {
-      const res = await axios.post('http://localhost:3000/todo', {
-        title: text,
-      })
+    const res = await axios.post('http://localhost:3000/todo', {
+      title: text,
+    })
 
-      if (res.data.isSuccess) {
-        notify(res.data.message, "success");
-        fetchTodos();
-      } else {
-        notify(res.data.message, "error");
-      }
-    } catch (err) {
-      notify("something went wrong");
-      console.log(err);
+    if (res.data.isSuccess) {
+      notify(res.data.message, "success");
+      fetchTodos();
+    } else {
+      notify(res.data.message, "error");
     }
   };
 
   const toggleTodo = async (id: number, title: string, completed: boolean) => {
-    try {
-      const res = await axios.patch(`http://localhost:3000/todo/${id}`, {
-        title: title,
-        completed: !completed,
-      })
+    const res = await axios.patch(`http://localhost:3000/todo/${id}`, {
+      title: title,
+      completed: !completed,
+    })
 
-      if (res.data.isSuccess) {
-        notify(res.data.message, "success");
-        fetchTodos();
-      } else {
-        notify(res.data.message);
-      }
-
-    } catch (err) {
-      notify("something went wrong");
-      console.log(err);
+    if (res.data.isSuccess) {
+      notify(res.data.message, "success");
+      fetchTodos();
+    } else {
+      notify(res.data.message);
     }
   };
 
   const editTodo = async (id: number, title: string, completed: boolean) => {
-    try {
-      const res = await axios.patch(`http://localhost:3000/todo/${id}`, {
-        title: title,
-        completed: completed,
-      })
+    const res = await axios.patch(`http://localhost:3000/todo/${id}`, {
+      title: title,
+      completed: completed,
+    })
 
-      if (res.data.isSuccess) {
-        notify(res.data.message, "success");
-        fetchTodos();
-      } else {
-        notify(res.data.message);
-      }
-    } catch (err) {
-      notify("something went wrong");
-      console.log(err);
+    if (res.data.isSuccess) {
+      notify(res.data.message, "success");
+      fetchTodos();
+    } else {
+      notify(res.data.message);
     }
   };
 
   const deleteTodo = async (id: number) => {
-    try {
-      const res = await axios.delete(`http://localhost:3000/todo/${id}`)
+    const res = await axios.delete(`http://localhost:3000/todo/${id}`)
 
-      if (res.data.isSuccess) {
-        notify(res.data.message, "success");
-        fetchTodos();
-      } else {
-        notify(res.data.message);
-      }
-    } catch (err) {
-      notify("something went wrong");
-      console.log(err);
+    if (res.data.isSuccess) {
+      notify(res.data.message, "success");
+      fetchTodos();
+    } else {
+      notify(res.data.message);
     }
   };
 
