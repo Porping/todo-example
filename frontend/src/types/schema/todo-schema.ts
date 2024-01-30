@@ -4,7 +4,7 @@ export type TodoType = {
   completed: boolean;
 };
 
-export type ResponseType = {
+export type GetTodosResponse = {
   data: TodoType[];
   message: string;
   isSuccess: boolean;

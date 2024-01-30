@@ -1,10 +1,10 @@
 // App.tsx
-import React, { useState, useEffect } from "react";
-import { ToastContainer, toast, TypeOptions } from 'react-toastify';
-import Todo from "./components/Todo";
-import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import { TodoType } from "./types/schema/todo-schema";
+import React, { useEffect, useState } from "react";
+import { ToastContainer, TypeOptions, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Todo from "./components/Todo";
+import { TodoType } from './types/schema/todo-schema';
 
 
 const App: React.FC = () => {
@@ -22,9 +22,6 @@ const App: React.FC = () => {
     type: type ?? "default",
   });
 
-
-
-
   useEffect(() => {
     fetchTodos();
   }, []);
@@ -32,80 +29,85 @@ const App: React.FC = () => {
   const fetchTodos = async () => {
     try {
       const res = await axios.get('http://localhost:3000/todo');
-      console.log(res.data)
       if (res.data.isSuccess) {
         notify(res.data.message, "success");
         setTodos(res.data.data);
       }
     } catch (err) {
+      notify("something went wrong");
       console.log(err);
     }
   }
 
-  const addTodo = (text: string) => {
+  const addTodo = async (text: string) => {
     try {
-      axios.post('http://localhost:3000/todo', {
+      const res = await axios.post('http://localhost:3000/todo', {
         title: text,
-      }).then((res) => {
-        if (res.data.isSuccess) {
-          notify(res.data.message, "success");
-          fetchTodos();
-        } else {
-          notify(res.data.message, "error");
-        }
       })
+
+      if (res.data.isSuccess) {
+        notify(res.data.message, "success");
+        fetchTodos();
+      } else {
+        notify(res.data.message, "error");
+      }
     } catch (err) {
+      notify("something went wrong");
       console.log(err);
     }
   };
 
-  const toggleTodo = (id: number, title: string, completed: boolean) => {
+  const toggleTodo = async (id: number, title: string, completed: boolean) => {
     try {
-      axios.patch(`http://localhost:3000/todo/${id}`, {
+      const res = await axios.patch(`http://localhost:3000/todo/${id}`, {
         title: title,
         completed: !completed,
-      }).then((res) => {
-        if (res.data.isSuccess) {
-          notify(res.data.message, "success");
-          fetchTodos();
-        } else {
-          notify(res.data.message);
-        }
       })
+
+      if (res.data.isSuccess) {
+        notify(res.data.message, "success");
+        fetchTodos();
+      } else {
+        notify(res.data.message);
+      }
+
     } catch (err) {
+      notify("something went wrong");
       console.log(err);
     }
   };
 
-  const editTodo = (id: number, title: string, completed: boolean) => {
+  const editTodo = async (id: number, title: string, completed: boolean) => {
     try {
-      axios.patch(`http://localhost:3000/todo/${id}`, {
+      const res = await axios.patch(`http://localhost:3000/todo/${id}`, {
         title: title,
         completed: completed,
-      }).then((res) => {
-        if (res.data.isSuccess) {
-          notify(res.data.message, "success");
-          fetchTodos();
-        } else {
-          notify(res.data.message);
-        }
       })
+
+      if (res.data.isSuccess) {
+        notify(res.data.message, "success");
+        fetchTodos();
+      } else {
+        notify(res.data.message);
+      }
     } catch (err) {
+      notify("something went wrong");
       console.log(err);
     }
   };
 
-  const deleteTodo = (id: number) => {
+  const deleteTodo = async (id: number) => {
     try {
-      axios.delete(`http://localhost:3000/todo/${id}`).then((res) => {
-        if (res.data.isSuccess) {
-          notify(res.data.message, "success");
-          fetchTodos();
-        } else {
-          notify(res.data.message);
-        }
-      })
+      const res = await axios.delete(`http://localhost:3000/todo/${id}`)
+
+      if (res.data.isSuccess) {
+        notify(res.data.message, "success");
+        fetchTodos();
+      } else {
+        notify(res.data.message);
+      }
     } catch (err) {
+      notify("something went wrong");
       console.log(err);
     }
   };

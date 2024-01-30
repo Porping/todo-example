@@ -1,15 +1,15 @@
 import axios from 'axios';
-import { TodoType, ResponseType } from '../types/schema/todo-schema.ts';
+import { TodoType, GetTodosResponse } from '../types/schema/todo-schema.ts';
 
 class todoService {
 
-  public async getTodo(): Promise<ResponseType> {
+  public async getTodo(): Promise<GetTodosResponse> {
     return axios.get('http://localhost:3000/todo').then((res) => {
-      return res.data as unknown as ResponseType;
+      return res.data as unknown as GetTodosResponse;
     })
   }
 
-  public async addTodo(title: string): Promise<ResponseType> {
+  public async addTodo(title: string): Promise<GetTodosResponse> {
     return axios.post('http://localhost:3000/todo', {
       title: title
     }).then((res) => {
