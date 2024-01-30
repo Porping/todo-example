@@ -1,48 +1,118 @@
 // App.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { ToastContainer, toast, TypeOptions } from 'react-toastify';
 import Todo from "./components/Todo";
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+import { TodoType } from "./types/schema/todo-schema";
 
-interface TodoItem {
-  id: number;
-  text: string;
-  completed: boolean;
-}
 
 const App: React.FC = () => {
-  const [todos, setTodos] = useState<TodoItem[]>([
-    { id: 1, text: "Learn React", completed: false },
-    { id: 2, text: "Build a Todo App", completed: false },
-  ]);
+  const [todos, setTodos] = useState<TodoType[]>([]);
+  // const {getTodo,todos, addTodo} = useTodo();
+  const notify = (text:string, type?: TypeOptions | undefined) => toast('🦄 ' + text, {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    type: type ?? "default",
+    });
+
+
+
+
+  useEffect( () => {
+    fetchTodos();
+  }, []);
+  
+  const fetchTodos = async () => {
+    try {
+      const res = await axios.get('http://localhost:8081/todo');
+      if(res.data.isSuccess){
+        notify(res.data.message, "success");
+        setTodos(res.data.data);
+      }
+    }catch (err) {
+      console.log(err);
+    }
+  }
 
   const addTodo = (text: string) => {
-    setTodos((prevTodos) => [
-      ...prevTodos,
-      { id: prevTodos.length + 1, text, completed: false },
-    ]);
+    try {
+      axios.post('http://localhost:8081/todo', {
+        title: text,
+      }).then((res) => {
+        if (res.data.isSuccess) {
+          notify(res.data.message, "success");
+          fetchTodos();
+        }else {
+          notify(res.data.message, "error");
+        }
+      })
+    }catch (err) {
+      console.log(err);
+    }
   };
 
-  const toggleTodo = (id: number) => {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+  const toggleTodo = (id: number,title:string, completed: boolean) => {
+    try {
+      axios.patch(`http://localhost:8081/todo/${id}`,{
+        title: title,
+        completed: !completed,
+      }).then((res) => {
+        if (res.data.isSuccess) {
+          notify(res.data.message, "success");
+          fetchTodos();
+        } else {
+          notify(res.data.message);
+        }
+    })
+    }catch (err) {
+      console.log(err);
+    }
   };
 
-  const editTodo = (id: number, newText: string) => {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
-        todo.id === id ? { ...todo, text: newText } : todo
-      )
-    );
+  const editTodo = (id: number,title:string, completed: boolean) => {
+    try {
+      axios.patch(`http://localhost:8081/todo/${id}`,{
+        title: title,
+        completed: completed,
+      }).then((res) => {
+        if (res.data.isSuccess) {
+          notify(res.data.message, "success");
+          fetchTodos();
+        } else {
+          notify(res.data.message);
+        }
+    })
+    }catch (err) {
+      console.log(err);
+    }
   };
 
   const deleteTodo = (id: number) => {
-    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+    try {
+      axios.delete(`http://localhost:8081/todo/${id}`).then((res) => {
+        if (res.data.isSuccess) {
+          notify(res.data.message, "success");
+          fetchTodos();
+        } else {
+          notify(res.data.message);
+        }
+    })
+    }catch (err) {
+      console.log(err);
+    }
   };
 
   return (
+   
     <div className="max-w-md mx-auto mt-8 p-4 shadow-lg shadow-[#E8D8C4] bg-[#E8D8C4] ">
+      <ToastContainer />
       <h1 className="text-2xl font-bold mb-4 text-[#6D2932]">Todo App</h1>
       <div className="mb-4">
         <input
@@ -57,7 +127,11 @@ const App: React.FC = () => {
           }}
         />
       </div>
-      {todos.map((todo) => (
+      {todos == null ? (
+        <p className=' text-center text-lg font-semibold animate-pulse'>No todo </p>
+      ) : (
+        <> 
+        {todos.map((todo) => (
         <Todo
           key={todo.id}
           todo={todo}
@@ -66,6 +140,9 @@ const App: React.FC = () => {
           onDelete={deleteTodo}
         />
       ))}
+        </>
+      )}
+     
     </div>
   );
 };

@@ -2,22 +2,22 @@
 import React, { useState } from "react";
 
 interface TodoProps {
-  todo: { id: number; text: string; completed: boolean };
-  onToggle: (id: number) => void;
-  onEdit: (id: number, newText: string) => void;
+  todo: { id: number; title: string; completed: boolean };
+  onToggle: (id: number,title:string, completed: boolean) => void;
+  onEdit: (id: number, title:string, completed: boolean) => void;
   onDelete: (id: number) => void;
 }
 
 const Todo: React.FC<TodoProps> = ({ todo, onToggle, onEdit, onDelete }) => {
   const [isEditing, setEditing] = useState(false);
-  const [newText, setNewText] = useState(todo.text);
+  const [newText, setNewText] = useState(todo.title);
 
   const handleEdit = () => {
     setEditing(true);
   };
 
   const handleSave = () => {
-    onEdit(todo.id, newText);
+    onEdit(todo.id, newText, todo.completed);
     setEditing(false);
   };
 
@@ -43,9 +43,9 @@ const Todo: React.FC<TodoProps> = ({ todo, onToggle, onEdit, onDelete }) => {
             className={`cursor-pointer ${
               todo.completed ? "line-through text-gray-400" : "text-black"
             }`}
-            onClick={() => onToggle(todo.id)}
+            onClick={() => onToggle(todo.id,todo.title, todo.completed)}
           >
-            {todo.text}
+            {todo.title}
           </span>
           <button onClick={handleEdit} className="ml-2 text-blue-500">
             Edit
