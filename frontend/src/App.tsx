@@ -10,7 +10,7 @@ import { TodoType } from "./types/schema/todo-schema";
 const App: React.FC = () => {
   const [todos, setTodos] = useState<TodoType[]>([]);
   // const {getTodo,todos, addTodo} = useTodo();
-  const notify = (text:string, type?: TypeOptions | undefined) => toast('🦄 ' + text, {
+  const notify = (text: string, type?: TypeOptions | undefined) => toast('🦄 ' + text, {
     position: "top-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -20,47 +20,48 @@ const App: React.FC = () => {
     progress: undefined,
     theme: "light",
     type: type ?? "default",
-    });
+  });
 
 
 
 
-  useEffect( () => {
+  useEffect(() => {
     fetchTodos();
   }, []);
-  
+
   const fetchTodos = async () => {
     try {
-      const res = await axios.get('http://localhost:8081/todo');
-      if(res.data.isSuccess){
+      const res = await axios.get('http://localhost:3000/todo');
+      console.log(res.data)
+      if (res.data.isSuccess) {
         notify(res.data.message, "success");
         setTodos(res.data.data);
       }
-    }catch (err) {
+    } catch (err) {
       console.log(err);
     }
   }
 
   const addTodo = (text: string) => {
     try {
-      axios.post('http://localhost:8081/todo', {
+      axios.post('http://localhost:3000/todo', {
         title: text,
       }).then((res) => {
         if (res.data.isSuccess) {
           notify(res.data.message, "success");
           fetchTodos();
-        }else {
+        } else {
           notify(res.data.message, "error");
         }
       })
-    }catch (err) {
+    } catch (err) {
       console.log(err);
     }
   };
 
-  const toggleTodo = (id: number,title:string, completed: boolean) => {
+  const toggleTodo = (id: number, title: string, completed: boolean) => {
     try {
-      axios.patch(`http://localhost:8081/todo/${id}`,{
+      axios.patch(`http://localhost:3000/todo/${id}`, {
         title: title,
         completed: !completed,
       }).then((res) => {
@@ -70,15 +71,15 @@ const App: React.FC = () => {
         } else {
           notify(res.data.message);
         }
-    })
-    }catch (err) {
+      })
+    } catch (err) {
       console.log(err);
     }
   };
 
-  const editTodo = (id: number,title:string, completed: boolean) => {
+  const editTodo = (id: number, title: string, completed: boolean) => {
     try {
-      axios.patch(`http://localhost:8081/todo/${id}`,{
+      axios.patch(`http://localhost:3000/todo/${id}`, {
         title: title,
         completed: completed,
       }).then((res) => {
@@ -88,29 +89,29 @@ const App: React.FC = () => {
         } else {
           notify(res.data.message);
         }
-    })
-    }catch (err) {
+      })
+    } catch (err) {
       console.log(err);
     }
   };
 
   const deleteTodo = (id: number) => {
     try {
-      axios.delete(`http://localhost:8081/todo/${id}`).then((res) => {
+      axios.delete(`http://localhost:3000/todo/${id}`).then((res) => {
         if (res.data.isSuccess) {
           notify(res.data.message, "success");
           fetchTodos();
         } else {
           notify(res.data.message);
         }
-    })
-    }catch (err) {
+      })
+    } catch (err) {
       console.log(err);
     }
   };
 
   return (
-   
+
     <div className="max-w-md mx-auto mt-8 p-4 shadow-lg shadow-[#E8D8C4] bg-[#E8D8C4] ">
       <ToastContainer />
       <h1 className="text-2xl font-bold mb-4 text-[#6D2932]">Todo App</h1>
@@ -130,19 +131,19 @@ const App: React.FC = () => {
       {todos == null ? (
         <p className=' text-center text-lg font-semibold animate-pulse'>No todo </p>
       ) : (
-        <> 
-        {todos.map((todo) => (
-        <Todo
-          key={todo.id}
-          todo={todo}
-          onToggle={toggleTodo}
-          onEdit={editTodo}
-          onDelete={deleteTodo}
-        />
-      ))}
+        <>
+          {todos.map((todo) => (
+            <Todo
+              key={todo.id}
+              todo={todo}
+              onToggle={toggleTodo}
+              onEdit={editTodo}
+              onDelete={deleteTodo}
+            />
+          ))}
         </>
       )}
-     
+
     </div>
   );
 };
