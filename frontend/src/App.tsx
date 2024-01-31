@@ -1,52 +1,50 @@
 // App.tsx
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { ToastContainer, TypeOptions, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Todo from "./components/Todo";
-import { TodoType } from "./types/schema/todo-schema";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { ToastContainer, TypeOptions, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Todo from './components/Todo';
+import { TodoType } from './types/schema/todo-schema';
 
 const App: React.FC = () => {
   const [todos, setTodos] = useState<TodoType[]>([]);
   // const {getTodo,todos, addTodo} = useTodo();
-  const notify = (text: string, type?: TypeOptions | undefined) =>
-    toast("🦄 " + text, {
-      position: "top-right",
+
+  const notify = (text: string, type?: TypeOptions) =>
+    toast('🦄 ' + text, {
+      position: 'top-right',
       autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-      theme: "light",
-      type: type ?? "default",
+      theme: 'light',
+      type: type ?? 'default',
     });
 
   useEffect(() => {
     fetchTodos();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchTodos = async () => {
-    const res = await axios.get("http://localhost:3000/todo");
+    const res = await axios.get('http://localhost:3000/todo');
     if (res.data.isSuccess) {
-      notify(res.data.message, "success");
+      notify(res.data.message, 'success');
       setTodos(res.data.data);
-    } else {
-      notify(res.data.message);
     }
   };
 
   const addTodo = async (text: string) => {
-    const res = await axios.post("http://localhost:3000/todo", {
+    const res = await axios.post('http://localhost:3000/todo', {
       title: text,
     });
 
     if (res.data.isSuccess) {
-      notify(res.data.message, "success");
+      notify(res.data.message, 'success');
       fetchTodos();
     } else {
-      notify(res.data.message, "error");
+      notify(res.data.message, 'error');
     }
   };
 
@@ -57,7 +55,7 @@ const App: React.FC = () => {
     });
 
     if (res.data.isSuccess) {
-      notify(res.data.message, "success");
+      notify(res.data.message, 'success');
       fetchTodos();
     } else {
       notify(res.data.message);
@@ -71,7 +69,7 @@ const App: React.FC = () => {
     });
 
     if (res.data.isSuccess) {
-      notify(res.data.message, "success");
+      notify(res.data.message, 'success');
       fetchTodos();
     } else {
       notify(res.data.message);
@@ -82,7 +80,7 @@ const App: React.FC = () => {
     const res = await axios.delete(`http://localhost:3000/todo/${id}`);
 
     if (res.data.isSuccess) {
-      notify(res.data.message, "success");
+      notify(res.data.message, 'success');
       fetchTodos();
     } else {
       notify(res.data.message);
@@ -90,7 +88,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-4 shadow-lg shadow-[#E8D8C4] bg-[#E8D8C4] ">
+    <div className="max-w-md mx-auto mt-8 p-4 shadow-lg shadow-[#E8D8C4] bg-[#E8D8C4]">
       <ToastContainer />
       <h1 className="text-2xl font-bold mb-4 text-[#6D2932]">Todo App</h1>
       <div className="mb-4">
@@ -108,7 +106,7 @@ const App: React.FC = () => {
       </div>
       {todos == null ? (
         <p className=" text-center text-lg font-semibold animate-pulse">
-          No todo{" "}
+          No todo
         </p>
       ) : (
         <>

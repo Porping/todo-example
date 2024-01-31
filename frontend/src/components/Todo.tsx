@@ -1,10 +1,10 @@
 // Todo.tsx
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 interface TodoProps {
   todo: { id: number; title: string; completed: boolean };
-  onToggle: (id: number,title:string, completed: boolean) => void;
-  onEdit: (id: number, title:string, completed: boolean) => void;
+  onToggle: (id: number, title: string, completed: boolean) => void;
+  onEdit: (id: number, title: string, completed: boolean) => void;
   onDelete: (id: number) => void;
 }
 
@@ -22,9 +22,7 @@ const Todo: React.FC<TodoProps> = ({ todo, onToggle, onEdit, onDelete }) => {
   };
 
   return (
-    <div
-      className={`flex items-center justify-between p-2 border-b border-[#6D2932]`}
-    >
+    <div className="flex items-center justify-between p-2 border-b border-[#6D2932]">
       {isEditing ? (
         <div className="flex items-center">
           <input
@@ -40,10 +38,8 @@ const Todo: React.FC<TodoProps> = ({ todo, onToggle, onEdit, onDelete }) => {
       ) : (
         <div className="flex items-center">
           <span
-            className={`cursor-pointer ${
-              todo.completed ? "line-through text-gray-400" : "text-black"
-            }`}
-            onClick={() => onToggle(todo.id,todo.title, todo.completed)}
+            className={`cursor-pointer ${todo.completed ? "line-through text-gray-400" : "text-black"}`}
+            onClick={() => onToggle(todo.id, todo.title, todo.completed)}
           >
             {todo.title}
           </span>
