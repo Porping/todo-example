@@ -1,8 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* set background black */
-body {
-  background-color: #561C24;
-}

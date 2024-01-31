@@ -1,0 +1,21 @@
+pnpm install -D tsx @types/node typescript
+
+"type": "module"
+"dev": "tsx watch src/index.ts"
+
+paste tsconfig.json
+
+// สร้าว compose
+
+pnpm install express
+pnpm i -D @types/express
+
+
+
+pnpm i mysql2
+
+pnpm i body-parser
+pnpm i @types/body-parser
+
+pnpm i cors
+pnpm i -D @types/cors
